@@ -1,6 +1,8 @@
 package com.teamagile.javadrills;
 
 public class StringCalculator {
+
+
     public int add(String numbers) {
         if (numbers.contains("-")) {
             throw new IllegalArgumentException("no negatives");
