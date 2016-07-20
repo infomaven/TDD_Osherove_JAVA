@@ -1,47 +1,45 @@
 package com.teamagile.javadrills;
 
-import java.util.Date;
+public class StringCalculatorWithTwoDep {
 
-public class StringCalculator {
+    private Logger log;
+    private WebService service;
 
-    /**
-     * Method parses a String list of numbers, converts to numerical and performs the math.
-     * No support for adding negative numbers
-     * @param numbers
-     * @return
-     * @throws Throwable
-     */
+    public StringCalculatorWithTwoDep( Logger logger, WebService webService) {
+        this.log     = logger;
+        this.service = webService;
+    }
+
     public int add(String numbers) throws Throwable {
+        log.writeMessage( new TraceMessage(100, "message"));
         if (numbers.contains("-")) {
-            throw new IllegalArgumentException("no negative input allowed");
+            throw new IllegalArgumentException("no negatives");
         }
-        if (isEmptyInput(numbers)) {
+        if (isEmptyInput(numbers))
             return defaultValue();
-        }
 
         if (isSingleNumber(numbers))
             return parseSingleNumber(numbers);
 
-        // todo: add()  needs to work for 2 or more numbers in a String
-
-/// todo: replace hard-coded value with the calculated value
         return 3;
-    }
-
-    public String GetMessageWithDate() {
-        return getTime() + " some message";
-    }
-
-    protected  long getTime() {
-        return new Date().getTime();
     }
 
     private boolean isSingleNumber(String numbers) {
         return !isMultipleNumbers(numbers);
     }
 
-    private int parseSingleNumber(String numbers) {
+    private int parseSingleNumber(String numbers) throws Throwable {
+        int result = Integer.parseInt( numbers );
+        notifyLogger( result);
         return Integer.parseInt(numbers);
+    }
+
+    private void notifyLogger(int result) throws Throwable {
+        try {
+            this.log.write( "got: " + result );
+        } catch (Throwable throwable) {
+            service.write( "got: " + throwable.getClass().getName());
+        }
     }
 
     private boolean isMultipleNumbers(String numbers) {
@@ -65,5 +63,6 @@ public class StringCalculator {
             return 0;
         }
         return Integer.parseInt(numbers);
+
     }
 }

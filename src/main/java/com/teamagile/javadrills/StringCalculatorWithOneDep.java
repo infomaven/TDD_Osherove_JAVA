@@ -1,39 +1,34 @@
 package com.teamagile.javadrills;
 
-import java.util.Date;
+public class StringCalculatorWithOneDep {
 
-public class StringCalculator {
+    private Logger log;
 
-    /**
-     * Method parses a String list of numbers, converts to numerical and performs the math.
-     * No support for adding negative numbers
-     * @param numbers
-     * @return
-     * @throws Throwable
-     */
+    public StringCalculatorWithOneDep( Logger logger ) {
+        this.log  = logger;
+
+    }
+
+    // todo: limit this method to TWO numbers at a time
+    
     public int add(String numbers) throws Throwable {
         if (numbers.contains("-")) {
-            throw new IllegalArgumentException("no negative input allowed");
+            throw new IllegalArgumentException("no negatives");
         }
-        if (isEmptyInput(numbers)) {
+        if (isEmptyInput(numbers))
             return defaultValue();
-        }
 
         if (isSingleNumber(numbers))
             return parseSingleNumber(numbers);
 
-        // todo: add()  needs to work for 2 or more numbers in a String
+        int listLength = numbers.length();
+        int firstNum, secondNum, sum;
 
-/// todo: replace hard-coded value with the calculated value
+
+        // log the sum
+        this.log.write("3");
+
         return 3;
-    }
-
-    public String GetMessageWithDate() {
-        return getTime() + " some message";
-    }
-
-    protected  long getTime() {
-        return new Date().getTime();
     }
 
     private boolean isSingleNumber(String numbers) {
@@ -41,6 +36,12 @@ public class StringCalculator {
     }
 
     private int parseSingleNumber(String numbers) {
+        int result = Integer.parseInt( numbers );
+        try {
+            this.log.write( "got: " + result);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         return Integer.parseInt(numbers);
     }
 
@@ -65,5 +66,6 @@ public class StringCalculator {
             return 0;
         }
         return Integer.parseInt(numbers);
+
     }
 }
