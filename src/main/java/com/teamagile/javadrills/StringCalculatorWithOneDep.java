@@ -9,34 +9,40 @@ public class StringCalculatorWithOneDep {
 
     }
 
-    // todo: limit this method to TWO numbers at a time
+
+
+    // todo: add logic to handle comma delimited list of two numbers
     
     public int add(String numbers) throws Throwable {
+        int result = 0;
+
         if (numbers.contains("-")) {
+            this.log.write("Illegal Argument found - no negatives");
             throw new IllegalArgumentException("no negatives");
         }
-        if (isEmptyInput(numbers))
-            return defaultValue();
+        if (isEmptyInput(numbers)) {
+            result = defaultValue();
+            this.log.write("got: " + result);
+            return result;
+        }
 
-        if (isSingleNumber(numbers))
-            return parseSingleNumber(numbers);
+        if (isSingleNumber(numbers)) {
+            result = parseSingleNumber(numbers);
+            this.log.write("got: " + String.valueOf(result));
+            return result;
+        }
 
-        int listLength = numbers.length();
-        int firstNum, secondNum, sum;
-
-
-        // log the sum
-        this.log.write("3");
-
-        return 3;
+        return result;
     }
 
     private boolean isSingleNumber(String numbers) {
         return !isMultipleNumbers(numbers);
     }
 
+    // operates on one string operand at a time
     private int parseSingleNumber(String numbers) {
-        int result = Integer.parseInt( numbers );
+       // int result = Integer.parseInt( numbers );
+        int result = parse(numbers);
         try {
             this.log.write( "got: " + result);
         } catch (Throwable throwable) {

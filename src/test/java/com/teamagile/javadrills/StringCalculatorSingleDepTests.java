@@ -7,13 +7,18 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-
+/**
+ * Test class for verifying our interactions with a third-party logger
+ * The logger is represented by a homemade mock object
+ *
+ */
 public class StringCalculatorSingleDepTests {
 
-// Test object with embedded logging
+
+// StringCalculator with built-in logging for our tests
     private StringCalculatorWithOneDep makeCalc() {
 
-        return new StringCalculatorWithOneDep( new FakeLogger(0) );
+        return new StringCalculatorWithOneDep( new FakeLogger() );
     }
 
     private void assertAdding(String numbers, int expected) throws Throwable{
@@ -28,10 +33,12 @@ public class StringCalculatorSingleDepTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void add_alwaysCallsLogger() throws Throwable {
+    public void add_whenCalled_callsLogger() throws Throwable {
         FakeLogger mockLog = new FakeLogger();
+        // inject the mock into StringCalculator constructor
         StringCalculatorWithOneDep sc = new StringCalculatorWithOneDep( mockLog);
 
+        // ignoring return value of add(), because the assert will check for logging
         sc.add("");
 
         assertEquals( "got: 0", mockLog.logEntry);
@@ -39,7 +46,7 @@ public class StringCalculatorSingleDepTests {
     }
 
     @Test
-    public void add_usingSlowLogger_slowTimeIsRecorded() throws Throwable {
+    public void add_whenCalled_callsSlowLogger() throws Throwable {
         FakeLogger slowLog = new FakeLogger( 8000 );
         StringCalculatorWithOneDep sc = new StringCalculatorWithOneDep( slowLog);
 
