@@ -11,18 +11,42 @@ public class StringCalculatorWithTwoDep {
     }
 
     public int add(String numbers) throws Throwable {
-        log.writeMessage( new TraceMessage(100, "message"));
+        log.writeMessage(new TraceMessage(100, "message"));
+        int result = 0;
+        int operandOne = 0;
+        int operandTwo = 0;
+
         if (numbers.contains("-")) {
+            this.log.write("Illegal Argument found - no negatives");
             throw new IllegalArgumentException("no negatives");
         }
-        if (isEmptyInput(numbers))
-            return defaultValue();
+        if (isEmptyInput(numbers)) {
+            result = defaultValue();
+            this.log.write("got: " + result);
+            return result;
+        }
+        // try to process as numbers
+        else {
+            String[] equation = numbers.split(",");
+            if (equation.length == 1) {
+                result = parseSingleNumber(numbers);
+                return result;
 
-        if (isSingleNumber(numbers))
-            return parseSingleNumber(numbers);
-
-        return 3;
+            } else {
+                try {
+                    operandOne = Integer.valueOf(equation[0]);
+                    operandTwo = Integer.valueOf(equation[1]);
+                    result = operandOne + operandTwo;
+                    notifyLogger(result);
+                    return result;
+                } catch (NumberFormatException ex) {
+                    this.log.write("Number Format Exception - one or more non-numbers found");
+                    throw new NumberFormatException("number format error");
+                }
+            }
+        }
     }
+
 
     private boolean isSingleNumber(String numbers) {
         return !isMultipleNumbers(numbers);

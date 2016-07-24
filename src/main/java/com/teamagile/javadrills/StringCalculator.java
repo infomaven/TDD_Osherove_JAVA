@@ -12,21 +12,36 @@ public class StringCalculator {
      * @throws Throwable
      */
     public int add(String numbers) throws Throwable {
-        if (numbers.contains("-")) {
+        int operandOne = 0;
+        int operandTwo = 0;
+        int result = 0;
+
+        if (numbers.contains("-"))
             throw new IllegalArgumentException("no negative input allowed");
-        }
-        if (isEmptyInput(numbers)) {
+
+        if (isEmptyInput(numbers))
             return defaultValue();
+
+
+        else {
+            String[] equation = numbers.split(",");
+            if ( equation.length == 1) {
+                result = parseSingleNumber(numbers);
+                return result;
+            }
+            try {
+                operandOne = Integer.valueOf(equation[0]);
+                operandTwo = Integer.valueOf(equation[1]);
+                result = operandOne + operandTwo;
+                return result;
+            } catch (NumberFormatException ex) {
+                throw new NumberFormatException("number format error");
+            }
         }
-
-        if (isSingleNumber(numbers))
-            return parseSingleNumber(numbers);
-
-        // todo: add()  needs to work for 2 or more numbers in a String
-
-/// todo: replace hard-coded value with the calculated value
-        return 3;
     }
+
+
+
 
     public String GetMessageWithDate() {
         return getTime() + " some message";

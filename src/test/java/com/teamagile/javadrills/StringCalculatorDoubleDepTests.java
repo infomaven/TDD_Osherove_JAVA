@@ -11,21 +11,32 @@ import static org.junit.Assert.assertFalse;
 public class StringCalculatorDoubleDepTests {
 
 // factory pattern for testing
-    private StringCalculator makeCalc() {
+    private StringCalculatorWithTwoDep makeCalc() {
 
-        return new StringCalculator();
+        return new StringCalculatorWithTwoDep( new FakeLogger(0), new FakeWebService());
     }
 
-    // todo: evaluate remaining test coverage for StringCalculator with double dependencies
-
-
-
     private void assertAdding(String numbers, int expected) throws Throwable{
-        StringCalculator sc = makeCalc();
+        StringCalculatorWithTwoDep sc = makeCalc();
 
         int result = sc.add(numbers);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void add_whenLoggerFails_callWebService() throws Throwable {
+        FakeLogger failingLogger = new FakeLogger( 4000 );
+        failingLogger.willThrow( new OutOfMemoryError());
+        FakeWebService mockWebService = new FakeWebService();
+
+        // add defective Logger for this test instead of using the Factory
+        StringCalculatorWithTwoDep sc = new StringCalculatorWithTwoDep( failingLogger, mockWebService);
+
+        sc.add("1,2");
+
+        assertEquals( "got: java.lang.OutOfMemoryError", mockWebService.written);
+
     }
 
     @Rule
@@ -33,7 +44,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void add_negative_throws2()throws Throwable{
-        StringCalculator calc = makeCalc();
+        StringCalculatorWithTwoDep calc = makeCalc();
 
         thrown.expect(IllegalArgumentException.class);
         calc.add("-1");
@@ -47,7 +58,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void add_negative_throws0() throws Throwable {
-        StringCalculator stringCalculator = makeCalc();
+        StringCalculatorWithTwoDep stringCalculator = makeCalc();
         try {
             stringCalculator.add("-1");
         } catch (Throwable e) {
@@ -78,7 +89,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void parse_emptyString_returnsZero() {
-        StringCalculator sc = makeCalc();
+        StringCalculatorWithTwoDep sc = makeCalc();
 
         int result = sc.parse("");
 
@@ -87,7 +98,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void parse_singleNumber_returnsSameNumber() {
-        StringCalculator sc = makeCalc();
+        StringCalculatorWithTwoDep sc = makeCalc();
 
         int result = sc.parse("1");
 
@@ -97,7 +108,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void parse_singleNumber2_returnsNumber2() {
-        StringCalculator sc = makeCalc();
+        StringCalculatorWithTwoDep sc = makeCalc();
 
         int result = sc.parse("8");
 
@@ -106,7 +117,7 @@ public class StringCalculatorDoubleDepTests {
 
     @Test
     public void subtract_twoSimpleNumbers_subtractsThem() {
-        StringCalculator sc = makeCalc();
+        StringCalculatorWithTwoDep sc = makeCalc();
 
         int result = sc.subtract(1, 2);
 

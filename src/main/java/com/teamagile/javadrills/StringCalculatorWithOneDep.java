@@ -9,12 +9,10 @@ public class StringCalculatorWithOneDep {
 
     }
 
-
-
-    // todo: add logic to handle comma delimited list of two numbers
-    
     public int add(String numbers) throws Throwable {
         int result = 0;
+        int operandOne = 0;
+        int operandTwo = 0;
 
         if (numbers.contains("-")) {
             this.log.write("Illegal Argument found - no negatives");
@@ -25,18 +23,27 @@ public class StringCalculatorWithOneDep {
             this.log.write("got: " + result);
             return result;
         }
-
-        if (isSingleNumber(numbers)) {
-            result = parseSingleNumber(numbers);
-            this.log.write("got: " + String.valueOf(result));
-            return result;
+        // try to process as numbers
+        else {
+            String[] equation = numbers.split(",");
+            if (equation.length == 1) {
+                result = parseSingleNumber(numbers);
+                this.log.write("got: " + result);
+                return result;
+            } else {
+                try {
+                    operandOne = Integer.valueOf(equation[0]);
+                    operandTwo = Integer.valueOf(equation[1]);
+                    result = operandOne + operandTwo;
+                    this.log.write("got: " + String.valueOf(result));
+                    return result;
+                } catch (NumberFormatException ex) {
+                    this.log.write("Number Format Exception - one or more non-numbers found");
+                    throw new NumberFormatException("number format error");
+                }
+            }
         }
 
-        return result;
-    }
-
-    private boolean isSingleNumber(String numbers) {
-        return !isMultipleNumbers(numbers);
     }
 
     // operates on one string operand at a time
@@ -51,9 +58,6 @@ public class StringCalculatorWithOneDep {
         return Integer.parseInt(numbers);
     }
 
-    private boolean isMultipleNumbers(String numbers) {
-        return numbers.contains(",");
-    }
 
     private int defaultValue() {
         return 0;

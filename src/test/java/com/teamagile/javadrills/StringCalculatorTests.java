@@ -27,13 +27,17 @@ public class StringCalculatorTests{
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    // todo: figure out how to break these tests and add comments to that effect
     @Test
     public void add_negative_throws2()throws Throwable{
         StringCalculator calc = makeCalc();
 
         thrown.expect(IllegalArgumentException.class);
         calc.add("-1");
+    }
+
+    @Test( expected = NumberFormatException.class)
+    public void add_nonNumber_throws3() throws Throwable {
+        makeCalc().add("2, c");
     }
 
     @Test(expected = IllegalArgumentException.class)
